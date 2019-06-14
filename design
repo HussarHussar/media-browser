@@ -1,0 +1,1 @@
+terminal application that sends https request to youtube search (blocking output requests) and parses result into format that can be indexed with another command option to play videos from the search
