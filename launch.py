@@ -1,10 +1,13 @@
 #! /usr/bin/python3
 from PyQt5.QtWidgets import (QApplication, QLabel, QCheckBox, QRadioButton,
-QStyleFactory, QPushButton, QSlider, QLineEdit, QWidget, QVBoxLayout, QHBoxLayout, QDialog, QGroupBox, QTabWidget)
+                             QMainWindow, QStyleFactory, QPushButton, QSlider,
+                             QLineEdit, QWidget, QVBoxLayout, QHBoxLayout,
+                             QTextBrowser, QDialog, QGroupBox, QTabWidget,
+                             QTextEdit)
+from PyQt5.QtCore import Qt
+import sys, urllib.request, requests
 
-import sys
-
-class DracoView(QDialog):
+class DracoView(QMainWindow):
 
     def __init__(self, parent=None):
         super(DracoView, self).__init__(parent)
@@ -15,9 +18,10 @@ class DracoView(QDialog):
     def makeTabs(self):
         self.tabWidget = QTabWidget()
         self.tab1 = QVBoxLayout()
-        self.makeSearchView()
         self.tab2 = QHBoxLayout()
         self.tab2.addWidget(QLabel("hello world"))
+
+        self.makeSearchView()
 
         a = QWidget()
         a.setLayout(self.tab1)
@@ -25,23 +29,44 @@ class DracoView(QDialog):
         b.setLayout(self.tab2)
         self.tabWidget.addTab(a, 'Search')
         self.tabWidget.addTab(b, 'Channels')
-        self.mainLayout = QVBoxLayout()
-        self.mainLayout.addWidget(self.tabWidget)
-        self.setLayout(self.mainLayout)
+        self.setCentralWidget(self.tabWidget)
         return
 
     def makeSearchView(self):
         topLayout = QHBoxLayout()
-        a = QLineEdit()
-        topLayout.addWidget(a)
-        topLayout.addWidget(QPushButton('Search'))
+        self.searchBox = QLineEdit()
+        topLayout.addWidget(self.searchBox)
+        searchbutton = QPushButton('Search')
+        topLayout.addWidget(searchbutton)
+        topLayout.setAlignment(Qt.AlignTop)
 
-        b = QWidget()
-        b.setLayout(topLayout)
-        self.tab1.addWidget(b)
+        a = QWidget()
+        a.setLayout(topLayout)
+        self.browser = QTextBrowser()
+
+        self.tab1.addWidget(a)
+        self.tab1.addWidget(self.browser)
+
+        self.yt = YtInf(self)
+        searchbutton.clicked.connect(self.yt.ytSearch)
         return
 
-    def ytSearch():
+class YtInf:
+#The interface for youtube navigation.
+#It takes the QMainWindow class as a parameter in order to interact with the browser.
+
+    def __init__(self, v):
+        self.v = v
+        return
+
+    def ytSearch(self):
+        s = 'https://www.youtube.com/results?search_query='
+        s = s + self.v.searchBox.text()
+
+        req = urllib.request.Request(s)
+        response = urllib.request.urlopen(req)
+        print(type(response))
+        self.v.browser.setHtml(response.read().decode())
 
         return
 

@@ -3,3 +3,6 @@ terminal application that sends https request to youtube search (blocking output
 
 -When application first runs, it reads config settings that have been serialized in json file in /data/.dracoconfigs
 -Warns user if there is no active vpn connection, (can be changed in settings)
+
+
+Description: 	A nimble and silent media browser.
