@@ -1,14 +1,13 @@
 #! /usr/bin/python3
-from PyQt5.QtWidgets import (QApplication, QLabel, QCheckBox, QRadioButton,
+from PyQt5.QtWidgets import (QApplication, QLabel,
                              QMainWindow, QStyleFactory, QPushButton, QSlider,
                              QLineEdit, QWidget, QVBoxLayout, QHBoxLayout,
-                             QTextBrowser, QDialog, QGroupBox, QTabWidget,
+                             QDialog, QGroupBox, QTabWidget,
                              QListWidgetItem, QGridLayout, QTextEdit,
-                             youtube-dl, QListWidget, QScrollArea)
-from PyQt5.QtCore import (Qt, QObject, pyqtSignal, pyqtSlot, QEvent,
-                          QItemSelection)
+                             QListWidget, QScrollArea)
+from PyQt5.QtCore import (Qt, QThread, pyqtSignal)
 from PyQt5.QtGui import QIcon
-import sys, requests
+import sys, requests, youtube_dl, subprocess
 from resources import contentdata
 
 class MediaBrowser(QMainWindow):
@@ -17,11 +16,12 @@ class MediaBrowser(QMainWindow):
         super(MediaBrowser, self).__init__(parent)
         self.makeItems()
         self.setWindowTitle('Media Browser')
-        self.resize(500, 400)
+        self.resize(600, 400)
         return
 
     def makeItems(self):
         #More things should be added here in UX branch
+        self.vids = []
         self.makeTabs()
         self.config = Configs(self)
         return
@@ -87,8 +87,8 @@ class MediaBrowser(QMainWindow):
         for b in blocks:
             bl = QHBoxLayout()
             element = QWidget()
-            pb = PButton(b.link)
-            db = DButton(b.link)
+            pb = PButton(self, b.link)
+            db = DButton(self, b.link)
 
             if len(b.title) > self.config.titleMaxSize:
                 m = self.config.titleMaxSize - 5
@@ -108,25 +108,57 @@ class MediaBrowser(QMainWindow):
         #s.setMaximumSize(600, 400)
         return
 
-    def playVideo(self):
+    def playVideo(self, link):
+        print('playing video...')
+        vid = VidWorker()
+        self.vids.append(vid)
+        vid.load(link)
+        vid.start()
+        return
+
+class VidWorker(QThread):
+    writing = pyqtSignal(str)
+
+    def __init__(self):
+        super(VidWorker, self).__init__()
+        return
+
+    def load(self, link):
+        self.link = link
+        return
+
+    def run(self):
+        subprocess.run(['mpv', self.link])
+        print('Done')
+        self.quit()
         return
 
 class PButton(QPushButton):
 
-    def __init__(self, link):
+    def __init__(self, v, link):
         super().__init__('')
         self.link = link
+        self.v = v
         self.setIcon(QIcon.fromTheme('media-playback-start'))
         self.setFixedWidth(30)
+        self.clicked.connect(self.play)
+        return
+
+    def play(self):
+        self.v.playVideo(self.link)
         return
 
 class DButton(QPushButton):
 
-    def __init__(self, link):
+    def __init__(self, v, link):
         super().__init__('')
         self.link = link
         self.setIcon(QIcon.fromTheme('document-save'))
         self.setFixedWidth(30)
+        self.clicked.connect(self.download)
+        return
+
+    def download(self):
         return
 
 class Configs:
