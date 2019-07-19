@@ -1,10 +1,14 @@
+Media browser is a tool used for quickly browsing, playing and downloading media without the complex privacy risks a web browser creates. It's focus is on a minimal design, privacy, and extensibility.
 
-
-
-
-
-
-If you see any privacy weaknesses, or you are a security expert with ideas on how the project can be improved, please contact me:
+If you have ideas about how the project can be improved, please contact me:
 	email: hussarhussar+git@protonmail.com
 	matrix: hussarhussar:matrix.org
 	freenode: 
+
+Privacy features:
+randomized request headers
+customisable headers
+No sessions or cookies
+No javascript
+
+It is highly recommended to also use a vpn to further imporove the privacy features of the application

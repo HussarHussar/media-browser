@@ -8,8 +8,10 @@ class YtInf():
 #The interface for youtube navigation.
 #It takes the QMainWindow class as a parameter in order to interact with the browser.
 
-    def __init__(self, v):
+    def __init__(self, v, index):
         self.v = v
+        self.name = 'Youtube'
+        self.index = index
         return
 
     def getPage(self):
@@ -51,7 +53,7 @@ class YtInf():
         return
 
     def pushData(self, blocks):
-        self.v.makeResults(blocks)
+        self.v.makeResults(blocks, self.index)
         return
 
 #findTags updates the global ids and titles (calling findTitle), then returns
@@ -59,7 +61,7 @@ class YtInf():
     def findTags(self, tag):
         if tag.name == 'div' and tag.has_attr('data-context-item-id'):
             id_ = str(tag.get('data-context-item-id'))
-            print('found ' + (id_))
+            self.v.statusBar().showMessage('found ' + (id_))
             return True
         return False
 

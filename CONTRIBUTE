@@ -1,0 +1,10 @@
+TODO:
+-Prevent multiple clicks on play button from playing the same video many times
+-Add statusbar
+-Add toolbar
+-Catch exceptions for no network connection
+-Show video info on left panel
+
+
+Creating an interface class for another site:
+The interface class should have the attribute 'name' representing the site name this will be used to identify the interface.
