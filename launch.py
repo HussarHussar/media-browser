@@ -1,5 +1,5 @@
 #! /usr/bin/python3
-from PyQt5.QtWidgets import (QApplication, QLabel,
+from PySide2.QtWidgets import (QApplication, QLabel,
                              QMainWindow, QStyleFactory, QPushButton, QSlider,
                              QLineEdit, QWidget, QVBoxLayout, QHBoxLayout,
                              QDialog, QGroupBox, QTabWidget,
@@ -7,8 +7,8 @@ from PyQt5.QtWidgets import (QApplication, QLabel,
                              QListWidget, QScrollArea, QStatusBar, QComboBox,
                              QTextBrowser, QStackedWidget, QToolBar,
                              QProgressBar, QInputDialog, QAction)
-from PyQt5.QtCore import (Qt, QThread, pyqtSignal, QDir)
-from PyQt5.QtGui import QIcon
+from PySide2.QtCore import (Qt, QThread, Signal, QDir)
+from PySide2.QtGui import QIcon
 import sys, requests, youtube_dl, subprocess
 from resources import contentdata
 
@@ -203,7 +203,7 @@ class State:
         self.searchFunc = s
 
 class VidWorker(QThread):
-    writing = pyqtSignal(str)
+    writing = Signal(str)
 
     def __init__(self):
         super(VidWorker, self).__init__()

@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-from PyQt5.QtCore import QThread, pyqtSignal
+from PySide2.QtCore import QThread, Signal
 from bs4 import BeautifulSoup
 import requests
 
@@ -79,7 +79,7 @@ class YtInf():
         return tag.name == 'a' and tag.has_attr('title')
 
 class NetWorker(QThread):
-    writing = pyqtSignal(str)
+    writing = Signal(str)
 
     def __init__(self):
         super(NetWorker, self).__init__()

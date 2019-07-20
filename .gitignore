@@ -10,3 +10,4 @@ randoms
 *.lock
 *.pyc
 *.pyo
+*.toml
