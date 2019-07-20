@@ -61,7 +61,7 @@ class YtInf():
     def findTags(self, tag):
         if tag.name == 'div' and tag.has_attr('data-context-item-id'):
             id_ = str(tag.get('data-context-item-id'))
-            self.v.statusBar().showMessage('found ' + (id_))
+            print('found ' + (id_))
             return True
         return False
 
@@ -72,7 +72,7 @@ class YtInf():
     def findTitle(self, tag):
         t = tag.find_all(self.a_has_title)
         t = str(t[0].get('title'))
-        print('found title ' + t)
+        self.v.statusBar().showMessage('found title ' + t)
         return t
 
     def a_has_title(self, tag):

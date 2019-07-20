@@ -6,8 +6,8 @@ from PyQt5.QtWidgets import (QApplication, QLabel,
                              QListWidgetItem, QGridLayout, QTextEdit,
                              QListWidget, QScrollArea, QStatusBar, QComboBox,
                              QTextBrowser, QStackedWidget, QToolBar,
-                             QProgressBar)
-from PyQt5.QtCore import (Qt, QThread, pyqtSignal)
+                             QProgressBar, QInputDialog, QAction)
+from PyQt5.QtCore import (Qt, QThread, pyqtSignal, QDir)
 from PyQt5.QtGui import QIcon
 import sys, requests, youtube_dl, subprocess
 from resources import contentdata
@@ -15,7 +15,7 @@ from resources import contentdata
 class MediaBrowser(QMainWindow):
     """
     The main window.
-    Attributes accessible to all functions are: searchSelector, state
+    Attributes: searchSelector, state, toolbar
 
     state: states Stores important properties of the window in a State class.
     state.states is an array of SearchState classes with attributes for
@@ -31,15 +31,40 @@ class MediaBrowser(QMainWindow):
         return
 
     def makeItems(self):
-        self.statusBar().showMessage('Welcome')
-        self.toolbar = QToolBar()
-        self.addToolBar(self.toolbar)
-        self.toolbar.addAction(QIcon.fromTheme('list-add'), 'URL')
-
+        self.makeToolBar()
+        self.makeStatusBar()
+        self.makeTabs()
         #More things should be added here in UX branch
         self.vids = []
-        self.makeTabs()
         self.config = Configs(self)
+        self.makeActions()
+        return
+
+    def makeActions(self):
+        playLink = QAction(QIcon.fromTheme('list-add'), 'URL', self)
+        playLink.triggered.connect(self.playLink)
+        self.toolbar.addAction(playLink)
+        self.addToolBar(self.toolbar)
+        return
+
+    def playLink(self):
+        text = QInputDialog.getText(self, 'Play Link', 'URL', QLineEdit.Normal)
+
+        if text[1]:
+            self.playVideo(str(text[0]))
+        return
+
+    def makeToolBar(self):
+        self.toolbar = QToolBar()
+        self.addToolBar(self.toolbar)
+        return
+
+    def makeMenu(self):
+        self.menu = self.menuBar()
+        return
+
+    def makeStatusBar(self):
+        self.statusBar().showMessage('Welcome')
         return
 
     def makeTabs(self):
@@ -47,7 +72,7 @@ class MediaBrowser(QMainWindow):
         self.tab1 = QGridLayout()
         self.tab2 = QHBoxLayout()
         self.tab3 = QVBoxLayout()
-        self.tab2.addWidget(QLabel("hello world"))
+        self.tab2.addWidget(QLabel("coming soon..."))
         self.tab3.addWidget(QLabel("coming soon..."))
 
         self.makeSearchView()
@@ -59,7 +84,7 @@ class MediaBrowser(QMainWindow):
         c = QWidget()
         c.setLayout(self.tab3)
         self.tabWidget.addTab(a, 'Search')
-        self.tabWidget.addTab(b, 'Channels')
+        self.tabWidget.addTab(b, 'Subscriptions')
         self.tabWidget.addTab(c, 'Videos') #Split into 'playing' and 'Downloading' lists
         self.setCentralWidget(self.tabWidget)
         return
