@@ -1,4 +1,4 @@
-#Media Browser
+# Media Browser
 This project is a work in progress. There are lots of bugs and poor exception handling.
 
 
