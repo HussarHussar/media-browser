@@ -1,5 +1,5 @@
 #Media Browser
-This project is a work in progress. There are lots of bugs and poor exception handling.
+This project is a work in progress. There are missing features and poor exception handling.
 
 
 ![screenshot](/resources/screen.png)
